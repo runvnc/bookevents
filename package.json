@@ -4,6 +4,8 @@
   "description": "runs once every minute",
   "main": "index.js",
   "dependencies": {
+    "delay": "^4.3.0",
+    "mustache": "^4.0.0",
     "node-fetch": "^2.6.0",
     "pg-promise": "^10.4.4"
   },
