@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "delay": "^4.3.0",
+    "group-by": "0.0.1",
     "mustache": "^4.0.0",
     "node-fetch": "^2.6.0",
     "pg-promise": "^10.4.4"
