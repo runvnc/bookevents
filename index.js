@@ -23,37 +23,6 @@ async function initDB() {
   await db.any(initSQL)
 }
 
-/* 
-runs once every minute
-
-get the list of coins and exchanges
-
-for each coin:
-  try
-    try
-      fire off getbooks events for all exchanges
-    catch
-
-    wait one second
-  catch
-
-let lambda;
-*/
-
-/*
-let coins = [
- { ourname: 'btc_usd', exchanges: { kraken: 'XXBTZUSD' } },
- { ourname: 'ltc_usd', exchanges: { kraken: 'XLTCZUSD' } }
-]
-
-let mktparams = {
-  kraken: {
-    "url": "https://api.kraken.com/0/public/Depth?pair={{sym}}",
-    "parser": "simple",
-    "field": "result"
-  }
-} */
-
 async function getparams() {
   let params = await db.any('select lower(exchange) as exchange, params from bookparams')
   params = groupBy(params,'exchange') 
@@ -69,7 +38,6 @@ async function getpairs() {
   return groupBy(pairs,'ourname')
 }
 
-
 async function init() {
   AWS.config.region = "us-east-2"
   lambda = new AWS.Lambda()
@@ -79,7 +47,12 @@ async function init() {
 async function bookEvent({oursym, mktname, symbol, params}) {
   let obj = { exchange: mktname, symbol: symbol+'$'+oursym}
   Object.assign(obj, params)
-  obj.url = mustache(obj.url, {sym:symbol})
+
+  let tokens = symbol.split(/[^A-Za-z]/)
+  let sym1 = '', sym2 = ''
+  if (tokens.length>1) [sym1, sym2] = tokens
+
+  obj.url = mustache(obj.url, {sym:symbol,sym1,sym2})
   let lambdaArgs = {
     ClientContext: "Screener", 
     FunctionName: "getbooks", 
@@ -90,7 +63,7 @@ async function bookEvent({oursym, mktname, symbol, params}) {
  }
  console.log({lambdaArgs})
 
-// return lambda.invoke(lambdaArgs).promise()
+ return lambda.invoke(lambdaArgs).promise()
 
 }
 
@@ -101,7 +74,7 @@ async function recordbooks({coins, mktparams}) {
         const symbol = mkt.theirpair
         const params = mktparams[mkt.exchange.toLowerCase()]
         console.log({mktparams, mkt,params})
-        const oursym = coin.ourname
+        const oursym = coin
         const toTrigger = []
         try {
           toTrigger.push(bookEvent({oursym, symbol, mktname:mkt.exchange, params}))
@@ -118,36 +91,13 @@ async function recordbooks({coins, mktparams}) {
   }
 }
 
-/*
-async function recordbooks({coins, mktparams}) {
-  for (let coin of coins) {  
-    try {
-      for (let mktname of Object.keys(coin.exchanges)) {
-        const symbol = coin.exchanges[mktname]
-        const params = mktparams[mktname]
-        const oursym = coin.ourname
-        const toTrigger = []
-        try {
-          toTrigger.push(bookEvent({oursym, symbol, mktname, params}))
-          await Promise.all(toTrigger)
-        } catch (e) {
-          console.error("bookEvent trigger error: "+mktname + " " +e.message)
-        } 
-      }
-
-    } catch (e) {
-      console.error("recordbooks error coin="+coin.ourname + e.message)
-    }
-    await delay(2000);
-  }
-} */
 
 exports.handler = async (event) => {
     let text = 'ok'
     await init()
    const mktparams = await getparams()
    const coins = await getpairs()
-   console.log({mktparams,coins})  
+   console.log({mktparams,coins:JSON.stringify(coins)})  
    await recordbooks({coins, mktparams}) 
    //await initDB()
    //text = await dbquery()
