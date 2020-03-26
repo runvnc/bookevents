@@ -98,7 +98,7 @@ exports.handler = async (event) => {
    const mktparams = await getparams()
    const coins = await getpairs()
    console.log({mktparams,coins:JSON.stringify(coins)})  
-   await recordbooks({coins, mktparams}) 
+   await recordbooks({coins, mktparams})
    //await initDB()
    //text = await dbquery()
    const response = {
