@@ -66,8 +66,8 @@ $$ language plpgsql;
 --  symbol varchar(10),
  -- asks float[],
 --  bids float[],
---  vwapx_bids float,
---  vwapx_asks float
+--  vwap_bids float,
+--  vwap_asks float
 --);
 
 
