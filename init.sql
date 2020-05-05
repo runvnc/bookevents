@@ -82,4 +82,8 @@ $$ language plpgsql;
 --  ourpair varchar(10)
 --);
 
+--create index concurrently vwap_update_asks_index on books ((vwap_asks is null), exchange, symbol)
+
+--create index concurrently vwap_update_bids_index on books ((vwap_bids is null), exchange, symbol)
+
 
