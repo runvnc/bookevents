@@ -1,0 +1,15 @@
+#!/bin/bash
+
+function update () {
+  zip -r ../betest.zip *
+  aws lambda update-function-code --function-name testbookevents --zip-file fileb://../betest.zip
+}
+
+echo "Are you sure you want to update testbookevents function?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) update; break;;
+        No ) exit;;
+    esac
+done
+
