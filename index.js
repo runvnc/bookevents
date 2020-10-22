@@ -71,6 +71,8 @@ async function recordbooks({coins, mktparams}) {
   for (let coin of Object.keys(coins)) {  
     try {
       for (let mkt of coins[coin]) {
+        if (mkt.exchange.toLowerCase() == 'tagz') continue;
+ 
         const symbol = mkt.theirpair
         const params = mktparams[mkt.exchange.toLowerCase()]
         console.log({mktparams, mkt,params})
