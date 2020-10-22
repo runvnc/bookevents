@@ -1,11 +1,11 @@
 #!/bin/bash
 
 function update () {
-  zip -r ../be.zip *
-  aws lambda update-function-code --function-name bookevents --zip-file fileb://../be.zip
+  zip -r ../be2.zip *
+  aws lambda update-function-code --function-name v2bookevents --zip-file fileb://../be2.zip
 }
 
-echo "Are you sure you want to update production bookevents function?"
+echo "Are you sure you want to update production v2bookevents function?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) update; break;;
