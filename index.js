@@ -55,7 +55,7 @@ async function bookEvent({oursym, mktname, symbol, params}) {
   obj.url = mustache(obj.url, {sym:symbol,sym1,sym2})
   let lambdaArgs = {
     ClientContext: "Screener", 
-    FunctionName: "getbooks", 
+    FunctionName: "v2getbooks", 
     InvocationType: "Event", 
     LogType: "Tail", 
     Payload: JSON.stringify(obj) //, 
