@@ -1,0 +1,8 @@
+{
+  "exchange": "mxc",
+  "url": "https://www.mxc.co/open/api/v2/market/depth?api_key=mx0EMUlLsvolNhPyzD&symbol=BCH_USDT&depth=10",
+  "parser": "simple",
+  "field": "data",
+  "nosym": true,
+  "symbol": "BCH_USDT$bch_usdt"
+}
